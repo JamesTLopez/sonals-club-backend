@@ -3,10 +3,12 @@ package application
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/joho/godotenv"
 )
 
 type App struct {
@@ -21,6 +23,12 @@ func New() *App {
 }
 
 func ( a *App ) Start(ctx context.Context) error {
+	enverr := godotenv.Load(".env")
+	if enverr != nil{
+  		log.Fatalf("Error loading .env file: %s", enverr)
+ 	}
+
+
 	conn, dberr := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if dberr != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", dberr)
