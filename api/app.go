@@ -1,4 +1,4 @@
-package application
+package api
 
 import (
 	"context"
@@ -23,11 +23,13 @@ func New() *App {
 }
 
 func ( a *App ) Start(ctx context.Context) error {
+	// Load environment variables
 	enverr := godotenv.Load(".env")
 	if enverr != nil{
   		log.Fatalf("Error loading .env file: %s", enverr)
  	}
 
+	// Connect to postgres server
 	conn, dberr := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if dberr != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", dberr)
@@ -35,6 +37,7 @@ func ( a *App ) Start(ctx context.Context) error {
 	}
 	defer conn.Close(context.Background())
 	
+	// Staret server
 	server := &http.Server {
 		Addr: ":8080",
 		Handler: a.router,
