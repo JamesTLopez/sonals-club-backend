@@ -29,6 +29,7 @@ func ( a *App ) Start(ctx context.Context) error {
   		log.Fatalf("Error loading .env file: %s", enverr)
  	}
 
+	fmt.Println(os.Getenv("DATABASE_URL"))
 	// Connect to postgres server
 	conn, dberr := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if dberr != nil {
