@@ -5,27 +5,27 @@ import (
 	"net/http"
 )
 
-type Order struct {
+type Review struct {
 
 }
 
 
-func (o *Order) CreateReview(w http.ResponseWriter,r *http.Request) {
+func (o *Review) CreateReview(w http.ResponseWriter,r *http.Request) {
 	fmt.Println("Review created");
 }
 
-func (o *Order) ReviewList(w http.ResponseWriter,r *http.Request) {
+func (o *Review) ReviewList(w http.ResponseWriter,r *http.Request) {
 	fmt.Println("Retrieve Review List");
 }
 
-func (o *Order) GetReviewById(w http.ResponseWriter,r *http.Request) {
+func (o *Review) GetReviewById(w http.ResponseWriter,r *http.Request) {
 	fmt.Println("Retrieve Review");
 }
 
-func (o *Order) UpdateReviewById(w http.ResponseWriter,r *http.Request) {
+func (o *Review) UpdateReviewById(w http.ResponseWriter,r *http.Request) {
 	fmt.Println("Update Review");
 }
 
-func (o *Order) DeleteReviewById(w http.ResponseWriter,r *http.Request) {
+func (o *Review) DeleteReviewById(w http.ResponseWriter,r *http.Request) {
 	fmt.Println("Delete Review");
 }
