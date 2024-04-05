@@ -1,0 +1,39 @@
+version: "3.7"
+services:
+  sonals-club-backend:
+    container_name: sonals-club-backend
+    build:
+      context: ./album-reviews
+      dockerfile: dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./album-reviews:/app
+  sonals-club-database:
+    container_name: postgres_sql
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_volume:/app/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USER=james
+      - POSTGRES_DB=sonalsguild
+  # migrate:
+  #   image: migrate/migrate
+  #   depends_on:
+  #     - sonals-club-database
+  #     - sonals-club-backend
+  #   volumes:
+  #     - ./sonals-club-backend:/db/migrations
+  #   command:
+  #     [
+  #       "-path",
+  #       "./db/migrations",
+  #       "-database",
+  #       "postgresql://james:secret@sonals-club-database:5432/sonalsguild?sslmode=disable",
+  #       "up",
+  #     ]
+volumes:
+  postgres_volume:
