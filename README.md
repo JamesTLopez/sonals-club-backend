@@ -1,4 +1,10 @@
-# sonals-club-backend
+# sonals-club-microservices
+
+## Description
+
+## Structure
+
+Entire application including microservices. Ideally, each folder would contain a seperate repository
 
 ### Creating migrations
 
