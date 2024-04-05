@@ -11,4 +11,4 @@ EXPOSE 8080
 # Specifies the executable command that runs when the container starts
 # ENTRYPOINT CompileDaemon --build="go build main.go"
 
-ENTRYPOINT CompileDaemon --build="go build main.go" --command=./main
+ENTRYPOINT CompileDaemon --build="go build ./cmd/main.go" --command=./main

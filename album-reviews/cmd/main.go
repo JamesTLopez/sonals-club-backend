@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	application "sonalsguild/api/api"
+	application "sonalsguild/internal/api"
 )
 
 func main() {
