@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"sonalsguild/internal/db"
+	"sonalsguild/router"
+	"sonalsguild/services"
 
 	"github.com/joho/godotenv"
 )
@@ -18,8 +20,7 @@ type Config struct {
 
 type Application struct {
 	Config Config
-	router http.Handler
-
+	Models services.Models
 }
 
 func (app *Application) Serve() error {
@@ -28,7 +29,7 @@ func (app *Application) Serve() error {
 
 	 server := &http.Server {
 		Addr: fmt.Sprintf(":%s",port),
-		Handler: app.router,
+		Handler: router.Routes(),
 	 }
 
 	 return server.ListenAndServe()
@@ -61,8 +62,8 @@ func main() {
 	}
 	
 	app := &Application {
-		Config:cfg,
-		// TODO: models
+		Config: cfg,
+		Models: services.New(dbConn.DB),
 	}
 
 	// Start server
