@@ -18,6 +18,8 @@ require (
 )
 
 require (
+	github.com/go-chi/chi v1.5.5
+	github.com/go-chi/cors v1.2.1
 	github.com/golang-migrate/migrate/v4 v4.17.0
 	github.com/jackc/pgconn v1.14.3
 	github.com/jackc/pgpassfile v1.0.0 // indirect
