@@ -1,39 +1,80 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
-	application "sonalsguild/internal/api"
+	"sonalsguild/internal/db"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 )
 
+
+
+type Config struct {
+	Port string
+}
+
+type Application struct {
+	Config Config
+	router http.Handler
+
+}
+
+func (app *Application) Serve() error {
+	 port := os.Getenv("PORT")
+	 fmt.Println("API is listening on port",port);
+
+	 server := &http.Server {
+		Addr: fmt.Sprintf(":%s",port),
+		Handler: app.router,
+	 }
+
+	 return server.ListenAndServe()
+}
+
+
 func main() {
 	fmt.Println("Starting...")
-	
-	app := application.New()
 	// Load environment variables
 	enverr := godotenv.Load(".env")
 	if enverr != nil{
   		log.Fatalf("Error loading .env file: %s", enverr)
  	}
 
-	conn, errs := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	if errs != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", errs)
-		os.Exit(1)
-	}
-	defer conn.Close(context.Background())
 
+
+	connectionString := os.Getenv("DATABASE_URL")
+
+	dbConn , databaseErr := db.ConnectPostgres(connectionString)
+
+	if databaseErr != nil {
+		log.Fatal("Cannot connect to database")
+	}
+
+	defer dbConn.DB.Close()
+
+	// Server configutations
+	cfg := Config {
+		Port:os.Getenv("PORT"),
+	}
+	
+	app := &Application {
+		Config:cfg,
+		// TODO: models
+	}
+
+	// Start server
+	err := app.Serve()
+	if err != nil {
+		log.Fatal("Error starting server: ",err)
+	}
+
+
+
+    // DATABASE
 
 	fmt.Println("Connected to the database, starting App")
-	
-	err := app.Start(context.TODO())
-	if err != nil {
-		fmt.Printf("Error starting server %v",err)
-	}
 }
 
