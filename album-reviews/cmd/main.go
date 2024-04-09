@@ -4,15 +4,16 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	application "sonalsguild/internal/api"
-	database "sonalsguild/internal/db"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	fmt.Println("Starting...")
+	
 	app := application.New()
 	// Load environment variables
 	enverr := godotenv.Load(".env")
@@ -20,21 +21,13 @@ func main() {
   		log.Fatalf("Error loading .env file: %s", enverr)
  	}
 
-	connPool,errorDbConnection := pgxpool.NewWithConfig(context.Background(), database.Config())
-	if errorDbConnection != nil {
-		log.Fatal("Error while creating connection to the database!!")
-	} 
-
-	connection, errAquire := connPool.Acquire(context.Background())
-	if errAquire != nil {
-		log.Fatal("Error while acquiring connection from the database pool!!")
-	} 
-	defer connection.Release()
-
-	errPing := connection.Ping(context.Background())
-	if errPing != nil{
-		log.Fatal("Could not ping database")
+	conn, errs := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if errs != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", errs)
+		os.Exit(1)
 	}
+	defer conn.Close(context.Background())
+
 
 	fmt.Println("Connected to the database, starting App")
 	
