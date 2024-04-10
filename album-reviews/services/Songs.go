@@ -15,7 +15,7 @@ type Song struct {
 }
 
 func (s *Song) GetAllSongs() ([]*Song,error) {
-	ctx, cancel := context.WithTimeout(context.Background(),dbTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
 
@@ -53,13 +53,14 @@ func (s *Song) CreateSong(song Song) (*Song,error) {
 
 	defer cancel()
 	query := `
-		INSERT INTO songs (name,description) 
-		VALUES ($1,$2) returning *
+		INSERT INTO songs (user_id, name,description) 
+		VALUES ($1,$2,$3) returning *
 	`
 	 
 	_, err := db.ExecContext(
 		ctx,
 		query,
+		song.User_id,
 		song.Name,
 		song.Description)
 	
