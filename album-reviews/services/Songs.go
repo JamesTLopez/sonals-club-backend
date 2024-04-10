@@ -54,7 +54,7 @@ func (s *Song) CreateSong(song Song) (*Song,error) {
 	defer cancel()
 	query := `
 		INSERT INTO songs (name,description) 
-		VALUES ($1,$2) return *
+		VALUES ($1,$2) returning *
 	`
 	 
 	_, err := db.ExecContext(
