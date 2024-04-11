@@ -78,3 +78,18 @@ func UpdateSong(w http.ResponseWriter, r *http.Request) {
 
 	helpers.WriteJson(w, http.StatusOK, songUpdated)
 }
+
+
+//DELETE/songs/{id}
+func DeleteSong(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r,"id");
+
+	err := song.DeleteSong(id)
+
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println(err)
+		return
+	}
+
+	helpers.WriteJson(w, http.StatusOK, "Song successfully deleted")
+}

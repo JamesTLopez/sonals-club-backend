@@ -106,8 +106,6 @@ func (s *Song) UpdateSong(id string, body Song) (*Song,error) {
 		returning *
 
 	`
-
-	 
 	_, err := db.ExecContext(
 		ctx,
 		query,
@@ -123,5 +121,28 @@ func (s *Song) UpdateSong(id string, body Song) (*Song,error) {
 	
 
 	return &body, nil
+
+}
+
+
+func (s *Song) DeleteSong(id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(),dbTimeout)
+
+	defer cancel()
+	query := `
+		DELETE FROM songs WHERE id = $1
+	`
+	_, err := db.ExecContext(
+		ctx,
+		query,
+		id,
+	)
+	
+	if err != nil {
+		return err
+	}
+	
+
+	return nil
 
 }
