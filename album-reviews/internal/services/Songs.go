@@ -2,17 +2,8 @@ package services
 
 import (
 	"context"
-	"time"
 )
 
-type Song struct {
-	ID string `json:"id"`
-	User_id string `json:"user_id"` 
-	Name string `json:"name"`
-	Description string `json:"description"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
 
 func (s *Song) GetAllSongs() ([]*Song,error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
