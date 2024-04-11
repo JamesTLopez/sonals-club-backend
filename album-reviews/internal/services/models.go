@@ -12,7 +12,7 @@ type JsonResponse struct {
 type User struct {
 	ID string `json:"id"`
 	Username string `json:"username"`
-	password string 
+	password string `json:"password"`
 	Email string `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -21,7 +21,7 @@ type User struct {
 
 type Song struct {
 	ID string `json:"id"`
-	userID string
+	// userID string `json:"user_id"` 
 	Name string `json:"name"`
 	Description string `json:"description"`
 	CreatedAt time.Time `json:"created_at"`

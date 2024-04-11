@@ -38,7 +38,7 @@ func GetSongById(w http.ResponseWriter, r *http.Request) {
 
 
 // POST/songs/song
-func CreateSongs(w http.ResponseWriter, r *http.Request) {
+func CreateSong(w http.ResponseWriter, r *http.Request) {
 	var songData services.Song
 	err := json.NewDecoder(r.Body).Decode(&songData)
 	if err != nil {
@@ -57,4 +57,24 @@ func CreateSongs(w http.ResponseWriter, r *http.Request) {
 	helpers.WriteJson(w, http.StatusOK, songCreated)
 }
 
-// 
+//PUT/songs/{id}
+func UpdateSong(w http.ResponseWriter, r *http.Request) {
+	var songData services.Song
+	id := chi.URLParam(r,"id");
+
+	err := json.NewDecoder(r.Body).Decode(&songData)
+
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println(err)
+		return
+	}
+
+	songUpdated, err := song.UpdateSong(id,songData)
+
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println(err)
+		return
+	}
+
+	helpers.WriteJson(w, http.StatusOK, songUpdated)
+}

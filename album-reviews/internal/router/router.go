@@ -23,6 +23,7 @@ func Routes() http.Handler {
 
 	router.Get("/api/v1/songs",controllers.GetAllSongs)
 	router.Get("/api/v1/songs/{id}",controllers.GetSongById)
-	router.Post("/api/v1/songs",controllers.CreateSongs)
+	router.Post("/api/v1/songs",controllers.CreateSong)
+	router.Put("/api/v1/songs/{id}",controllers.UpdateSong)
 	return router
 }
