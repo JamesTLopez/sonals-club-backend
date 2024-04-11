@@ -20,7 +20,7 @@ func (s *User) RegisterUser(user User) (*User,error) {
 		ctx,
 		query,
 		user.Username,
-		user.Password,
+		user.password,
 		user.Email)
 	
 	if err != nil {

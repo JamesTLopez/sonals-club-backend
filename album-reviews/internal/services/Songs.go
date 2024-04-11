@@ -38,6 +38,32 @@ func (s *Song) GetAllSongs() ([]*Song,error) {
 	return songs,nil
 }
 
+func (s *Song) GetSongById(id string) (*Song, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `
+		SELECT id, name, description, created_at FROM songs WHERE id = $1
+	`
+
+	var song Song
+
+	row :=  db.QueryRowContext(ctx,query,id)
+	
+	err := row.Scan(
+		&song.ID,
+		&song.Name,
+		&song.Description,
+		&song.CreatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &song, err
+}
+
 
 func (s *Song) CreateSong(song Song) (*Song,error) {
 	ctx, cancel := context.WithTimeout(context.Background(),dbTimeout)
@@ -51,7 +77,7 @@ func (s *Song) CreateSong(song Song) (*Song,error) {
 	_, err := db.ExecContext(
 		ctx,
 		query,
-		song.User_id,
+		song.userID,
 		song.Name,
 		song.Description)
 	

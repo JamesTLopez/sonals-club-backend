@@ -48,7 +48,7 @@ func main() {
 
 	connectionString := os.Getenv("DATABASE_URL")
 
-	dbConn , databaseErr := db.ConnectPostgres(connectionString)
+	dbConn, databaseErr := db.ConnectPostgres(connectionString)
 
 	if databaseErr != nil {
 		log.Fatal("Cannot connect to database")

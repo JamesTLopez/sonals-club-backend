@@ -5,13 +5,14 @@ import (
 	"net/http"
 	"sonalsguild/helpers"
 	"sonalsguild/internal/services"
+
+	"github.com/go-chi/chi/v5"
 )
 
 
 var song services.Song
 
 // GET/songs
-
 func GetAllSongs(w http.ResponseWriter, r *http.Request) {
 	all, err := song.GetAllSongs()
 	if err != nil {
@@ -21,6 +22,20 @@ func GetAllSongs(w http.ResponseWriter, r *http.Request) {
 
 	helpers.WriteJson(w, http.StatusOK, helpers.Envelop{"songs":all})
 }
+
+// GET/songs/{id}
+func GetSongById(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r,"id")
+
+	song, err := song.GetSongById(id)
+	
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println(err)
+		return
+	}
+	helpers.WriteJson(w, http.StatusOK, song)
+}
+
 
 // POST/songs/song
 func CreateSongs(w http.ResponseWriter, r *http.Request) {
@@ -41,3 +56,5 @@ func CreateSongs(w http.ResponseWriter, r *http.Request) {
 	}
 	helpers.WriteJson(w, http.StatusOK, songCreated)
 }
+
+// 
