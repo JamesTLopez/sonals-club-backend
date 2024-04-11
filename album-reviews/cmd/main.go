@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 	"sonalsguild/internal/db"
-	"sonalsguild/router"
-	"sonalsguild/services"
+	"sonalsguild/internal/router"
+	"sonalsguild/internal/services"
 
 	"github.com/joho/godotenv"
 )

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"sonalsguild/helpers"
-	"sonalsguild/services"
+	"sonalsguild/internal/services"
 )
 
 

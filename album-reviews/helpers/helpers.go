@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"sonalsguild/services"
+	"sonalsguild/internal/services"
 )
 
 type Envelop map[string] interface {}
