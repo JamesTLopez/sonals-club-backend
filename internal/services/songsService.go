@@ -11,7 +11,7 @@ func (s *Song) GetAllSongs() ([]*Song,error) {
 	defer cancel()
 
 
-	query := `SELECT id, name, description, created_at FROM songs`
+	query := `SELECT id, name, labels, description, created_at FROM songs`
 
 	rows,err := db.QueryContext(ctx, query)
 
@@ -25,6 +25,7 @@ func (s *Song) GetAllSongs() ([]*Song,error) {
 		err := rows.Scan(
 			&song.ID,
 			&song.Name,
+			&song.Labels,
 			&song.Description,
 			&song.CreatedAt,
 		)
@@ -44,7 +45,7 @@ func (s *Song) GetSongById(id string) (*Song, error) {
 	defer cancel()
 
 	query := `
-		SELECT id, name, description, created_at FROM songs WHERE id = $1
+		SELECT id, name, labels, description, created_at FROM songs WHERE id = $1
 	`
 
 	var song Song
@@ -54,6 +55,7 @@ func (s *Song) GetSongById(id string) (*Song, error) {
 	err := row.Scan(
 		&song.ID,
 		&song.Name,
+		&song.Labels,
 		&song.Description,
 		&song.CreatedAt,
 	)
@@ -71,8 +73,8 @@ func (s *Song) CreateSong(song Song) (*Song,error) {
 
 	defer cancel()
 	query := `
-		INSERT INTO songs (user_id, name, description) 
-		VALUES ($1,$2,$3) returning *
+		INSERT INTO songs (user_id, name, labels, description) 
+		VALUES ($1,$2,$3,$4) returning *
 	`
 	 
 	_, err := db.ExecContext(
@@ -80,6 +82,7 @@ func (s *Song) CreateSong(song Song) (*Song,error) {
 		query,
 		1, // TODO: when auth is implemented with jwt, this is where we would put it
 		song.Name,
+		song.Labels,
 		song.Description)
 	
 	if err != nil {
@@ -91,7 +94,7 @@ func (s *Song) CreateSong(song Song) (*Song,error) {
 
 }
 
-
+// TODO: added update labels functionality
 func (s *Song) UpdateSong(id string, body Song) (*Song,error) {
 	ctx, cancel := context.WithTimeout(context.Background(),dbTimeout)
 
