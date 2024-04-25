@@ -46,8 +46,6 @@ func CreateSong(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.WriteJson(w, http.StatusOK, songData)
-
 	songCreated, err := song.CreateSong(songData)
 
 	if err != nil {
