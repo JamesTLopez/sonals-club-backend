@@ -13,3 +13,12 @@ You can also take advantage of the Makefile (currenlt works only with localhost 
 migrate create -ext sql -dir db/migrations -seq create_users_table
 migrate -database "postgresql://james:secret@localhost:5432/sonalsguild?sslmode=disable" -path db/migrations up
 ```
+
+### NOTES
+
+```
+make
+golang-migrate
+
+```
+
