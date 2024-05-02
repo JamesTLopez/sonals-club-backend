@@ -33,6 +33,7 @@ func Routes() http.Handler {
 	router.Get("/api/v1/samples", controllers.GetAllSamples);
 	router.Post("/api/v1/samples",controllers.CreateSample);
 	router.Put("/api/v1/samples/{id}", controllers.UpdateSample)
+	router.Delete("/api/v1/samples/{id}", controllers.DeleteSample);
 	
 	return router
 }

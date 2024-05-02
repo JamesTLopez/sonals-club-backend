@@ -72,3 +72,24 @@ func (sample *Sample) UpdateSample(id string, sampleData Sample) (*Sample,error)
 	return &sampleData,nil
 
 }
+
+func (sample *Sample) DeleteSample(id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(),dbTimeout)
+	defer cancel()
+
+	query := `
+		DELETE FROM Samples WHERE id = $1 	
+	`
+
+	_,err := db.ExecContext(
+		ctx,
+		query,
+		id,
+	)
+
+	if err != nil {
+		return  err
+	}
+
+	return nil
+}

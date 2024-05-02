@@ -66,3 +66,17 @@ func UpdateSample( w http.ResponseWriter, r *http.Request) {
 	helpers.WriteJson(w, http.StatusOK, sampleUpdated)
 
 }
+
+func DeleteSample( w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r,"id")
+	
+	err := samplesService.DeleteSample(id)
+
+	if err != nil {
+
+		helpers.ErrorJson(w,err)
+		return 
+	}
+
+	helpers.WriteJson(w, http.StatusOK, id)
+}
