@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"sonalsguild/helpers"
 	"sonalsguild/internal/services"
+
+	"github.com/go-chi/chi/v5"
 )
 
 var samplesService services.Sample
@@ -40,5 +42,27 @@ func CreateSample(w http.ResponseWriter, r *http.Request){
 	}
 
 	helpers.WriteJson(w, http.StatusOK, sampleCreated)
+
+}
+
+func UpdateSample( w http.ResponseWriter, r *http.Request) {
+	var sampleData services.Sample
+	id := chi.URLParam(r,"id");
+
+	err := json.NewDecoder(r.Body).Decode(&sampleData)
+
+	if err != nil {
+		helpers.ErrorJson(w,err)
+		return
+	}
+
+	sampleUpdated, err := samplesService.UpdateSample(id, sampleData)
+
+	if err != nil {
+		helpers.ErrorJson(w,err)
+		return
+	}
+
+	helpers.WriteJson(w, http.StatusOK, sampleUpdated)
 
 }

@@ -49,3 +49,26 @@ func (sample *Sample) CreateSample(sampleData Sample) (*Sample,error) {
 
 	return &sampleData,nil
 }	
+
+
+func (sample *Sample) UpdateSample(id string, sampleData Sample) (*Sample,error) {
+	ctx, cancel := context.WithTimeout(context.Background(),dbTimeout)
+	defer cancel()
+
+	query := `
+		UPDATE Samples SET 
+			name = $1,
+			updated_at = $2
+			WHERE id = $3
+			returning *
+	`
+
+	_,err := db.ExecContext(ctx, query,sampleData.Name,time.Now(),id)
+
+	if err != nil{
+		return nil,err
+	}
+
+	return &sampleData,nil
+
+}
