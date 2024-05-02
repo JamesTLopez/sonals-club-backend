@@ -31,6 +31,7 @@ func Routes() http.Handler {
 
 	// Samples Routes
 	router.Get("/api/v1/samples", controllers.GetAllSamples);
+	router.Post("/api/v1/samples",controllers.CreateSample);
 	
 	return router
 }
