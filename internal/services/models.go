@@ -29,3 +29,12 @@ type Song struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type Sample struct {
+	ID string `json:"id"`
+	userId string `json:"user_id"`
+	songId string `json:"song_id"`
+	Name string `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}

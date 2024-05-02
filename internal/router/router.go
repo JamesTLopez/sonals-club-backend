@@ -21,11 +21,16 @@ func Routes() http.Handler {
         MaxAge: 300,
 	}) )
 
+	// Songs Routes
 	router.Get("/api/v1/songs",controllers.GetAllSongs)
 	router.Get("/api/v1/songs/{id}",controllers.GetSongById)
 	router.Post("/api/v1/songs",controllers.CreateSong)
 	router.Put("/api/v1/songs/{id}",controllers.UpdateSong)
 	router.Delete("/api/v1/songs/{id}",controllers.DeleteSong)
+
+
+	// Samples Routes
+	router.Get("/api/v1/samples", controllers.GetAllSamples);
 	
 	return router
 }

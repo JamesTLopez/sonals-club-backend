@@ -11,6 +11,7 @@ const dbTimeout = time.Second * 3
 type Models struct {
 	Songs Song
 	User User
+	Samples Sample
 	JsonResponse JsonResponse
 }
 
