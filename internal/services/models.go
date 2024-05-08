@@ -1,6 +1,10 @@
 package services
 
-import "time"
+import (
+	"database/sql"
+	"encoding/json"
+	"time"
+)
 
 type JsonResponse struct {
 	Error bool `json:"error"`
@@ -23,10 +27,10 @@ type Song struct {
 	ID string `json:"id"`
 	// userID string `json:"user_id"` 
 	Name string `json:"name"`
-	Labels string `json:"labels"`
+	Labels NullString `json:"labels"`
 	Description string `json:"description"`
-	Duration int `json:"duration"`
-	Color string `json:"color"`
+	Duration NullInt32 `json:"duration"`
+	Color NullString `json:"color"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -38,4 +42,27 @@ type Sample struct {
 	Name string `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+
+type NullString struct {
+	sql.NullString
+}
+func (ni *NullString) MarshalJSON() ([]byte, error) {
+	if !ni.Valid {
+		return []byte("null"), nil
+	}
+	return json.Marshal(ni.String)
+}
+
+
+type NullInt32 struct {
+	sql.NullInt32
+}
+
+func (ni *NullInt32) MarshalJSON() ([]byte, error) {
+	if !ni.Valid {
+		return []byte("null"), nil
+	}
+	return json.Marshal(ni.Int32)
 }
