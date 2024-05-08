@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS Songs(
    labels VARCHAR (50),
    description VARCHAR (50) NOT NULL,
    duration INT,
+   color VARCHAR (50),
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

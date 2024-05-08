@@ -26,6 +26,7 @@ type Song struct {
 	Labels string `json:"labels"`
 	Description string `json:"description"`
 	Duration int `json:"duration"`
+	Color string `json:"color"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
