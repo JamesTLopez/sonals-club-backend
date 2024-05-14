@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS Songs(
    id serial PRIMARY KEY,
    user_id INT REFERENCES users(id),
-   name VARCHAR (50) NOT NULL,
+   song_name VARCHAR (50) NOT NULL,
    labels VARCHAR (50),
    description VARCHAR (50) NOT NULL,
    duration INT,

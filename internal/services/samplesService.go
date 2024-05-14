@@ -10,7 +10,7 @@ func (sample *Sample) GetAllSamples() ([]*Sample, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `SELECT id, name, labels, description, duration, created_at FROM songs`
+	query := `SELECT id, sample_name, labels, description, duration, created_at FROM samples`
 
 	var arrayOfSamples []*Sample
 
@@ -29,7 +29,7 @@ func (sample *Sample) CreateSample(sampleData Sample) (*Sample,error) {
 	defer cancel()
 	
 	query := `
-		INSERT INTO Samples (user_id, name, created_at, updated_at) 
+		INSERT INTO Samples (user_id, sample_name, created_at, updated_at) 
 		VALUES ($1, $2, $3, $4) returning *
 	`
 
@@ -57,7 +57,7 @@ func (sample *Sample) UpdateSample(id string, sampleData Sample) (*Sample,error)
 
 	query := `
 		UPDATE Samples SET 
-			name = $1,
+			sample_name = $1,
 			updated_at = $2
 			WHERE id = $3
 			returning *

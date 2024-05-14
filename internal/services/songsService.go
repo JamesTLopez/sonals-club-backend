@@ -11,7 +11,7 @@ func (s *Song) GetAllSongs() ([]*Song,error) {
 	defer cancel()
 
 
-	query := `SELECT id, name, labels, description, duration, color, created_at FROM songs`
+	query := `SELECT id, song_name, labels, description, duration, color, created_at FROM songs`
 
 	rows,err := db.QueryContext(ctx, query)
 
@@ -47,7 +47,7 @@ func (s *Song) GetSongById(id string) (*Song, error) {
 	defer cancel()
 
 	query := `
-		SELECT id, name, labels, description, duration, color, created_at FROM songs WHERE id = $1
+		SELECT id, song_name, labels, description, duration, color, created_at FROM songs WHERE id = $1
 	`
 
 	var song Song
@@ -77,7 +77,7 @@ func (s *Song) CreateSong(song Song) (*Song,error) {
 
 	defer cancel()
 	query := `
-		INSERT INTO songs (user_id, name, labels, description, duration, color) 
+		INSERT INTO songs (user_id, song_name, labels, description, duration, color) 
 		VALUES ($1,$2,$3,$4,$5,$6) returning *
 	`
 
@@ -110,7 +110,7 @@ func (s *Song) UpdateSong(id string, body Song) (*Song,error) {
 	query := `
 		UPDATE songs
 		SET
-			name = $1,
+			song_name = $1,
 			labels = $2,
 			description = $3,
 			color = $4,

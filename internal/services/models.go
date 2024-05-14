@@ -26,11 +26,11 @@ type User struct {
 type Song struct {
 	ID string `json:"id"`
 	// userID string `json:"user_id"` 
-	Name string `json:"name"`
-	Labels NullString `json:"labels"`
+	Name string `json:"song_name,default:null"`
+	Labels string `json:"labels"`
 	Description string `json:"description"`
-	Duration NullInt32 `json:"duration"`
-	Color NullString `json:"color"`
+	Duration int `json:"duration"`
+	Color string `json:"color"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
