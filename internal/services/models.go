@@ -1,8 +1,6 @@
 package services
 
 import (
-	"database/sql"
-	"encoding/json"
 	"time"
 )
 
@@ -26,9 +24,9 @@ type User struct {
 type Song struct {
 	ID string `json:"id"`
 	// userID string `json:"user_id"` 
-	Name string `json:"song_name,default:null"`
+	Name *string `json:"song_name"`
 	Labels string `json:"labels"`
-	Description string `json:"description"`
+	Description *string `json:"description"`
 	Duration int `json:"duration"`
 	Color string `json:"color"`
 	CreatedAt time.Time `json:"created_at"`
@@ -44,25 +42,3 @@ type Sample struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-
-type NullString struct {
-	sql.NullString
-}
-func (ni *NullString) MarshalJSON() ([]byte, error) {
-	if !ni.Valid {
-		return []byte("null"), nil
-	}
-	return json.Marshal(ni.String)
-}
-
-
-type NullInt32 struct {
-	sql.NullInt32
-}
-
-func (ni *NullInt32) MarshalJSON() ([]byte, error) {
-	if !ni.Valid {
-		return []byte("null"), nil
-	}
-	return json.Marshal(ni.Int32)
-}
