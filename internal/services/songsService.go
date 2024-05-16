@@ -7,9 +7,10 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
+
 type GetAllSongsResponse struct {
 	Song
-	User
+	Username string `json:"username"`
 }
 func (s *Song) GetAllSongs() ([]*GetAllSongsResponse,error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -34,7 +35,7 @@ func (s *Song) GetAllSongs() ([]*GetAllSongsResponse,error) {
 		var data GetAllSongsResponse 
 		err := rows.Scan(
 			&data.Song.ID,
-			&data.User.Username,
+			&data.Username,
 			&data.Song.Name,
 			&data.Song.Labels,
 			&data.Song.Description,
