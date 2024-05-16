@@ -3,40 +3,51 @@ package services
 import (
 	"context"
 	"time"
+
+	sq "github.com/Masterminds/squirrel"
 )
 
-
-func (s *Song) GetAllSongs() ([]*Song,error) {
+type GetAllSongsResponse struct {
+	Song
+	User
+}
+func (s *Song) GetAllSongs() ([]*GetAllSongsResponse,error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
+	
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	sql, _, err := psql.Select("songs.id","username","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").ToSql()
 
-
-	query := `SELECT id, song_name, labels, description, duration, color, created_at FROM songs`
-
-	rows,err := db.QueryContext(ctx, query)
+	if err != nil {
+		return nil,err
+	}
+	
+	rows,err := db.QueryContext(ctx, sql)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var songs []*Song
+	var songs []*GetAllSongsResponse
+
 	for rows.Next() {
-		var song Song 
+		var data GetAllSongsResponse 
 		err := rows.Scan(
-			&song.ID,
-			&song.Name,
-			&song.Labels,
-			&song.Description,
-			&song.Duration,
-			&song.Color,
-			&song.CreatedAt,
+			&data.Song.ID,
+			&data.User.Username,
+			&data.Song.Name,
+			&data.Song.Labels,
+			&data.Song.Description,
+			&data.Song.Duration,
+			&data.Song.Color,
+			&data.Song.CreatedAt,
 		)
 
 		if err != nil {
 			return nil,err
 		}
 
-		songs = append(songs, &song)
+		songs = append(songs, &data)
 	}
 
 	return songs,nil
