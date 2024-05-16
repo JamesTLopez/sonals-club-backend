@@ -54,20 +54,28 @@ func (s *Song) GetAllSongs() ([]*GetAllSongsResponse,error) {
 	return songs,nil
 }
 
-func (s *Song) GetSongById(id string) (*Song, error) {
+type GetSongByIdResponse struct {
+	Song
+	Username string `json:"username"`
+}
+func (s *Song) GetSongById(id string) (*GetSongByIdResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `
-		SELECT id, song_name, labels, description, duration, color, created_at FROM songs WHERE id = $1
-	`
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	sql, _, err := psql.Select("songs.id","username","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").Where("songs.id IN ($1)").ToSql()
 
-	var song Song
-
-	row :=  db.QueryRowContext(ctx,query,id)
+	if err != nil {
+		return nil,err
+	}
 	
-	err := row.Scan(
+	var song GetSongByIdResponse
+
+	row :=  db.QueryRowContext(ctx,sql,id)
+	
+	err = row.Scan(
 		&song.ID,
+		&song.Username,
 		&song.Name,
 		&song.Labels,
 		&song.Description,
