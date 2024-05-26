@@ -5,7 +5,7 @@ import (
 )
 
 // GET/login
-func Login(w http.ResponseWriter, r *http.Request) {
+func LoginSpotify(w http.ResponseWriter, r *http.Request) {
 
 }
 
