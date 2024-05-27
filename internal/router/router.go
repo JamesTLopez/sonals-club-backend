@@ -35,5 +35,11 @@ func Routes() http.Handler {
 	router.Put("/api/v1/samples/{id}", controllers.UpdateSample)
 	router.Delete("/api/v1/samples/{id}", controllers.DeleteSample);
 	
+	// AuthRouters Spotify
+	router.Get("/auth/{provider}/callback",controllers.GetAuthCallbackSpotify);
+	router.Get("/logout/{provider}",controllers.GetAuthLogoutSpotify);
+	router.Get("/auth/{provider}",controllers.GetReAutheniticateSpotify);
+
+	
 	return router
 }

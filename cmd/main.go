@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sonalsguild/internal/auth"
 	"sonalsguild/internal/db"
 	"sonalsguild/internal/router"
 	"sonalsguild/internal/services"
@@ -44,10 +45,14 @@ func main() {
   		log.Fatalf("Error loading .env file: %s", enverr)
  	}
 
+	//NewAuth
+	auth.NewAuth()
+	
 
 
+
+    // Database
 	connectionString := os.Getenv("DATABASE_URL")
-
 	dbConn, databaseErr := db.ConnectPostgres(connectionString)
 
 	if databaseErr != nil {
