@@ -15,17 +15,16 @@ import (
 
 const (
 	key = "sdjasdmasd"
-	maxAge = 86400 * 30
+	maxAge = 600000
 	isProd = false
 )
-
 
 func NewAuth () {
 	enverr := godotenv.Load(".env")
 	if enverr != nil{
   		log.Fatalf("Error loading .env file in Authfile: %s", enverr)
  	}
-
+	
 	 store := sessions.NewCookieStore([]byte(key))
 	 store.MaxAge(maxAge)
 	 store.Options.Path = "/"
@@ -33,7 +32,7 @@ func NewAuth () {
 	 store.Options.Secure = isProd
 
 	 gothic.Store = store
-	 
+
 
 	// Setup authorization
 	goth.UseProviders(		
