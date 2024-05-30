@@ -3,19 +3,14 @@ module sonalsguild
 go 1.22.0
 
 require (
+	github.com/Masterminds/squirrel v1.5.4
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/lib/pq v1.10.9
 )
 
 require (
-	github.com/Masterminds/squirrel v1.5.4 // indirect
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/gorilla/context v1.1.1 // indirect
-	github.com/gorilla/mux v1.6.2 // indirect
-	github.com/gorilla/securecookie v1.1.2 // indirect
-	github.com/gorilla/sessions v1.2.2 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -23,14 +18,10 @@ require (
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
-	github.com/markbates/goth v1.80.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
-	golang.org/x/oauth2 v0.17.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
-	google.golang.org/appengine v1.6.8 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
 )
 
 require (
