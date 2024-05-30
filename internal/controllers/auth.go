@@ -2,31 +2,18 @@ package controllers
 
 import (
 	"bytes"
-	"crypto/rand"
 	"encoding/base64"
-	"encoding/hex"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"sonalsguild/helpers"
 	"strings"
 )
 
-// GenerateRandomString generates a random string of the specified length.
-func GenerateRandomString(length int) string {
-	bytes := make([]byte, length)
-	_, err := rand.Read(bytes)
-	if err!= nil {
-		panic(err)
-	}
-	return hex.EncodeToString(bytes)
-}
-
-
 // LOGIN/AUTHENTICATE USER
 func GetAutheniticateSpotify(w http.ResponseWriter, req *http.Request) {
-	randomString := GenerateRandomString(16)
+	randomString := helpers.GenerateRandomString(16)
 	scope := os.Getenv("SPOTIFY_SCOPE")
 	redirect_uri := os.Getenv("SPOTIFY_REDIRECT")
 	client_id := os.Getenv("SPOTIFY_CLIENT_ID")
@@ -56,25 +43,19 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 		helpers.WriteJson(w, http.StatusBadRequest, "Invalid query")
 	}
 
-	authOptions := map[string]string{
-		"code":          code,
-		"redirect_uri":  redirect_uri,
-		"grant_type":    "authorization_code",
-	}
-
 	// Prepare the authorization header
 	authHeader := base64.StdEncoding.EncodeToString([]byte(client_id + ":" + spotify_secret))
-	reqBody := fmt.Sprintf("code=%s&redirect_uri=%s&grant_type=authorization_code", authOptions["code"], authOptions["redirect_uri"])
+	reqBody := fmt.Sprintf("code=%s&redirect_uri=%s&grant_type=authorization_code", code, redirect_uri)
 
 	// Create a new HTTP request
 	req, err := http.NewRequest("POST", url, bytes.NewBufferString(reqBody))
-	if err!= nil {
+	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	// Set headers
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", "Basic "+authHeader)
+	req.Header.Set("Authorization", "Basic " + authHeader)
 
 	// Send the request
 	client := &http.Client{}
@@ -84,7 +65,7 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 
 	helpers.WriteJson(w, http.StatusOK, body)
 
