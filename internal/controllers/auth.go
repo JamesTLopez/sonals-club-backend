@@ -106,19 +106,17 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 	var authResp AuthResponse
 	err = json.Unmarshal(body, &authResp)
 
-	if err!= nil {
+	if err != nil {
 		fmt.Println("Error decoding JSON:", err)
 		return
 	}
 
 	token, err := generateJWT(authResp)
 
-	if err!= nil {
+	if err != nil {
 		fmt.Println("Error generating Token:", err)
 		return
 	}
-
-	fmt.Println("token",token)
 
 	helpers.WriteJson(w, http.StatusOK, token)
 }
