@@ -26,6 +26,7 @@ func generateJWT(spotify_token AuthResponse ) (string, error) {
 		"jwt_expires_in":  time.Now().Add(time.Hour * 1).Unix(), // 1 hour from now
 	}
 
+	
 	// Create the JWT token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
@@ -58,19 +59,13 @@ func GetAutheniticateSpotify(w http.ResponseWriter, req *http.Request) {
 	helpers.WriteJson(w, http.StatusOK, urls)
 }
 
-// Callback
-func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
+func RetrieveSpotifyAuthorizationToken(state string, code string) (*[]byte, error) {
 	url := "https://accounts.spotify.com/api/token"
-	code := r.URL.Query().Get("code")
-	state := r.URL.Query().Get("state")
 	client_id := os.Getenv("SPOTIFY_CLIENT_ID")
 	spotify_secret := os.Getenv("SPOTIFY_SECRET")
 	redirect_uri := os.Getenv("SPOTIFY_REDIRECT")
 
 
-	if state == "" {
-		helpers.WriteJson(w, http.StatusBadRequest, "Invalid query")
-	}
 
 	// Prepare the authorization header
 	authHeader := base64.StdEncoding.EncodeToString([]byte(client_id + ":" + spotify_secret))
@@ -80,7 +75,7 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 	req, err := http.NewRequest("POST", url, bytes.NewBufferString(reqBody))
 	if err != nil {
 		fmt.Println(err)
-		return
+		return nil,err
 	}
 	// Set headers
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -91,7 +86,7 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 	resp, err := client.Do(req)
 	if err!= nil {
 		fmt.Println(err)
-		return
+		return nil, err
 	}
 	defer resp.Body.Close()
 
@@ -99,12 +94,27 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return nil, err
 	}
 
+	return &body,nil
+}
+
+// Callback
+func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
+	code := r.URL.Query().Get("code")
+	state := r.URL.Query().Get("state")
+
+	body, err := RetrieveSpotifyAuthorizationToken(state,code)
+	
+	if err != nil{
+		fmt.Println("Error retrieving token from spotify:", err)
+		return
+	}
+	
 	// Decode JSON response
 	var authResp AuthResponse
-	err = json.Unmarshal(body, &authResp)
+	err = json.Unmarshal(*body, &authResp)
 
 	if err != nil {
 		fmt.Println("Error decoding JSON:", err)
@@ -120,11 +130,3 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 
 	helpers.WriteJson(w, http.StatusOK, token)
 }
-
-
-func GetAuthLogoutSpotify(w http.ResponseWriter, r *http.Request){
-	fmt.Println(":sdsd")
-	w.Header().Set("Location", "/")
-	w.WriteHeader(http.StatusTemporaryRedirect)
-}
-

@@ -45,7 +45,6 @@ func Routes() http.Handler {
 	// AuthRouters Spotify
 	router.Get("/auth/{provider}",controllers.GetAutheniticateSpotify);
 	router.Get("/auth/{provider}/callback",controllers.GetAuthCallbackSpotify);
-	router.Get("/logout/{provider}",controllers.GetAuthLogoutSpotify);
 
 	
 	return router
