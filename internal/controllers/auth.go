@@ -1,11 +1,7 @@
 package controllers
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"sonalsguild/helpers"
@@ -16,7 +12,7 @@ import (
 )
 
 
-func generateJWT(spotify_token AuthResponse ) (string, error) {
+func generateJWT(spotify_token AuthResponse, email string,display_name string ) (string, error) {
 	// Define the claims for the JWT
 	claims := jwt.MapClaims{
 		"access_token":     spotify_token.Access_token, // Replace with your actual access token
@@ -59,69 +55,27 @@ func GetAutheniticateSpotify(w http.ResponseWriter, req *http.Request) {
 	helpers.WriteJson(w, http.StatusOK, urls)
 }
 
-func RetrieveSpotifyAuthorizationToken(state string, code string) (*[]byte, error) {
-	url := "https://accounts.spotify.com/api/token"
-	client_id := os.Getenv("SPOTIFY_CLIENT_ID")
-	spotify_secret := os.Getenv("SPOTIFY_SECRET")
-	redirect_uri := os.Getenv("SPOTIFY_REDIRECT")
-
-
-
-	// Prepare the authorization header
-	authHeader := base64.StdEncoding.EncodeToString([]byte(client_id + ":" + spotify_secret))
-	reqBody := fmt.Sprintf("code=%s&redirect_uri=%s&grant_type=authorization_code", code, redirect_uri)
-
-	// Create a new HTTP request
-	req, err := http.NewRequest("POST", url, bytes.NewBufferString(reqBody))
-	if err != nil {
-		fmt.Println(err)
-		return nil,err
-	}
-	// Set headers
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", "Basic " + authHeader)
-
-	// Send the request
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err!= nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	// Read the response body and ensure it does not have any errors
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	return &body,nil
-}
-
 // Callback
 func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 	code := r.URL.Query().Get("code")
 	state := r.URL.Query().Get("state")
 
-	body, err := RetrieveSpotifyAuthorizationToken(state,code)
+	authResp, err := RetrieveSpotifyAuthorizationToken(state, code)
 	
 	if err != nil{
 		fmt.Println("Error retrieving token from spotify:", err)
 		return
 	}
-	
-	// Decode JSON response
-	var authResp AuthResponse
-	err = json.Unmarshal(*body, &authResp)
 
-	if err != nil {
-		fmt.Println("Error decoding JSON:", err)
+	userResp, err := GetSpotifyUser(*authResp)
+	
+	if err != nil{
+		fmt.Println("Error retrieving user from spotify:", err)
 		return
 	}
 
-	token, err := generateJWT(authResp)
+
+	token, err := generateJWT(*authResp,userResp.Email,userResp.DisplayName)
 
 	if err != nil {
 		fmt.Println("Error generating Token:", err)
