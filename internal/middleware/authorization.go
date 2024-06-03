@@ -38,7 +38,7 @@ func VerifyToken(next http.Handler) http.Handler {
 		}
 
 		claims, ok := token.Claims.(jwt.MapClaims);
-		
+
 		if ok {
 		} else {
 			fmt.Println("Error retrieving claims:", err)

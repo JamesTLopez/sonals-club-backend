@@ -14,18 +14,19 @@ import (
 
 
 func GetSpotifyUser(auth AuthResponse) (*GetUserSpotify, error) {
-		// get user
+	// create get user request
 	req, err := http.NewRequest("GET","https://api.spotify.com/v1/me",nil)
 
 	if err != nil {
 		fmt.Println("Error decoding generating new request", err)
 		return nil, err
 	}
-		// Add headers to the request
+
+	// Add headers to the request
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer " + auth.Access_token)
-	fmt.Println( auth.Access_token,req.Header)
 
+	// create http client
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err!= nil {

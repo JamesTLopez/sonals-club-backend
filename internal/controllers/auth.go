@@ -12,7 +12,7 @@ import (
 )
 
 
-func generateJWT(spotify_token AuthResponse, email string,display_name string ) (string, error) {
+func generateJWT(spotify_token AuthResponse, email string, display_name string ) (string, error) {
 	// Define the claims for the JWT
 	claims := jwt.MapClaims{
 		"access_token":     spotify_token.Access_token, // Replace with your actual access token
@@ -20,6 +20,8 @@ func generateJWT(spotify_token AuthResponse, email string,display_name string ) 
 		"spotify_expires_in":spotify_token.Expires_in,                 // Expires in 1 hour (3600 seconds)
 		"issued_at":        time.Now().Unix(),
 		"jwt_expires_in":  time.Now().Add(time.Hour * 1).Unix(), // 1 hour from now
+		"email":	email,
+		"display_name": display_name,
 	}
 
 	
@@ -68,7 +70,7 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userResp, err := GetSpotifyUser(*authResp)
-	
+
 	if err != nil{
 		fmt.Println("Error retrieving user from spotify:", err)
 		return
