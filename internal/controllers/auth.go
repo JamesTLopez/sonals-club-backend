@@ -12,7 +12,7 @@ import (
 )
 
 
-func generateJWT(spotify_token AuthResponse, email string, display_name string ) (string, error) {
+func generateJWT(spotify_token AuthResponse, email string, display_name string , spotify_id string) (string, error) {
 	// Define the claims for the JWT
 	claims := jwt.MapClaims{
 		"access_token":     spotify_token.Access_token, // Replace with your actual access token
@@ -22,6 +22,7 @@ func generateJWT(spotify_token AuthResponse, email string, display_name string )
 		"jwt_expires_in":  time.Now().Add(time.Hour * 1).Unix(), // 1 hour from now
 		"email":	email,
 		"display_name": display_name,
+		"spotify_id" : spotify_id,
 	}
 
 	
@@ -77,7 +78,7 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	token, err := generateJWT(*authResp,userResp.Email,userResp.DisplayName)
+	token, err := generateJWT(*authResp,userResp.Email,userResp.DisplayName, userResp.ID)
 
 	if err != nil {
 		fmt.Println("Error generating Token:", err)
