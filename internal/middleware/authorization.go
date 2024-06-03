@@ -39,10 +39,10 @@ func VerifyToken(next http.Handler) http.Handler {
 
 		claims, ok := token.Claims.(jwt.MapClaims);
 		
-		if ; ok {
-			fmt.Println(claims)
+		if ok {
 		} else {
-			fmt.Println(err)
+			fmt.Println("Error retrieving claims:", err)
+			helpers.ErrorJson(writer,err)
 		}
 		
 		ctx := context.WithValue(request.Context(), "user",claims) 
