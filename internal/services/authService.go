@@ -12,14 +12,14 @@ func (s *User) RegisterUser(user User) (*User,error) {
 
 	defer cancel()
 	query := `
-		INSERT INTO users (username, password, email) 
+		INSERT INTO users (display_name, password, email) 
 		VALUES ($1, $2, $3) returning *
 	`
 	 
 	_, err := db.ExecContext(
 		ctx,
 		query,
-		user.Username,
+		user.DisplayName,
 		user.password,
 		user.Email)
 	

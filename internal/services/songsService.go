@@ -10,14 +10,14 @@ import (
 
 type GetAllSongsResponse struct {
 	Song
-	Username string `json:"username"`
+	DisplayName string `json:"display_name"`
 }
 func (s *Song) GetAllSongs() ([]*GetAllSongsResponse,error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 	
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
-	sql, _, err := psql.Select("songs.id","username","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").ToSql()
+	sql, _, err := psql.Select("songs.id","display_name","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").ToSql()
 
 	if err != nil {
 		return nil,err
@@ -35,7 +35,7 @@ func (s *Song) GetAllSongs() ([]*GetAllSongsResponse,error) {
 		var data GetAllSongsResponse 
 		err := rows.Scan(
 			&data.Song.ID,
-			&data.Username,
+			&data.DisplayName,
 			&data.Song.Name,
 			&data.Song.Labels,
 			&data.Song.Description,
@@ -56,14 +56,14 @@ func (s *Song) GetAllSongs() ([]*GetAllSongsResponse,error) {
 
 type GetSongByIdResponse struct {
 	Song
-	Username string `json:"username"`
+	DisplayName string `json:"display_name"`
 }
 func (s *Song) GetSongById(id string) (*GetSongByIdResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
-	sql, _, err := psql.Select("songs.id","username","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").Where("songs.id IN ($1)").ToSql()
+	sql, _, err := psql.Select("songs.id","display_name","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").Where("songs.id IN ($1)").ToSql()
 
 	if err != nil {
 		return nil,err
@@ -75,7 +75,7 @@ func (s *Song) GetSongById(id string) (*GetSongByIdResponse, error) {
 	
 	err = row.Scan(
 		&song.ID,
-		&song.Username,
+		&song.DisplayName,
 		&song.Name,
 		&song.Labels,
 		&song.Description,
