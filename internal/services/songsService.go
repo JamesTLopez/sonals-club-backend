@@ -3,8 +3,6 @@ package services
 import (
 	"context"
 	"time"
-
-	sq "github.com/Masterminds/squirrel"
 )
 
 
@@ -16,7 +14,6 @@ func (s *Song) GetAllSongs() ([]*GetAllSongsResponse,error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 	
-	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	sql, _, err := psql.Select("songs.id","display_name","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").ToSql()
 
 	if err != nil {
@@ -62,7 +59,6 @@ func (s *Song) GetSongById(id string) (*GetSongByIdResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	sql, _, err := psql.Select("songs.id","display_name","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").Where("songs.id IN ($1)").ToSql()
 
 	if err != nil {

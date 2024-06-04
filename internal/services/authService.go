@@ -2,42 +2,63 @@ package services
 
 import (
 	"context"
-	"database/sql"
+	"fmt"
 	"log"
 )
 
 
-func CheckUserExists(email string) bool {
-    // Assuming db is your *sql.DB connection pool
-    var count int
-    query := `SELECT email FROM users WHERE email = $1`
-    err := db.QueryRow(query, email).Scan(&count)
-    if err!= nil && err!= sql.ErrNoRows {
-        log.Fatalf("Failed to query user existence: %v", err)
-    }
-    return count > 0
+func (a *Authorization) CheckUserExists(email string) bool {
+	ctx, cancel := context.WithTimeout(context.Background(),dbTimeout)
+	defer cancel()
+
+	fmt.Println("register check")
+    
+	sql, _, err := psql.Select("email").From("users").Where("email IN ($1)").ToSql()
+	if err != nil {
+		log.Fatalf("Failed to generate sql from squireel: %v",err)
+	}
+
+
+		
+	var user User
+	row :=  db.QueryRowContext(ctx,sql,email)
+
+	if row == nil {
+		fmt.Println("User does not exist")
+		return false
+	}
+
+
+	err = row.Scan(&user.Email)
+	if err!= nil {
+		fmt.Println("User Does not exist:", err)
+		return false
+	}
+
+    return true
 }
 
-func (s *User) RegisterUser(user User) (*User,error) {
+func (a *Authorization) RegisterUser(spotify_id string, display_name string, email string) (bool,error) {
 	ctx, cancel := context.WithTimeout(context.Background(),dbTimeout)
 
 	defer cancel()
 	query := `
-		INSERT INTO users (display_name, email) 
+		INSERT INTO users (spotify_id, display_name, email) 
 		VALUES ($1, $2, $3) returning *
 	`
 	 
 	_, err := db.ExecContext(
 		ctx,
 		query,
-		user.DisplayName,
-		user.Email)
+		spotify_id,
+		display_name,
+		email)
 	
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 	
 
-	return &user,nil
+	return true,nil
 	
 }

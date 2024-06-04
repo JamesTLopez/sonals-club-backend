@@ -5,12 +5,14 @@ import (
 	"net/http"
 	"os"
 	"sonalsguild/helpers"
+	"sonalsguild/internal/services"
 	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
+var authService services.Authorization
 
 func generateJWT(spotify_token AuthResponse, email string, display_name string , spotify_id string) (string, error) {
 	// Define the claims for the JWT
@@ -75,6 +77,18 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 	if err != nil{
 		fmt.Println("Error retrieving user from spotify:", err)
 		return
+	}
+
+	exists := authService.CheckUserExists(userResp.Email);
+	// Register 
+	if(!exists) {
+
+		_,err := authService.RegisterUser(userResp.ID,userResp.DisplayName,userResp.Email)
+		if err != nil {
+			fmt.Println("Error registering user")
+			helpers.ErrorJson(w,err)
+			return 
+		}
 	}
 
 

@@ -47,3 +47,5 @@ type SpotifyMe struct {
 	Country string `json:"id"`
 	DisplayName string `json:""`
 }
+
+type Authorization struct {}
