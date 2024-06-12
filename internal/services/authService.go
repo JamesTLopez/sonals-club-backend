@@ -10,8 +10,6 @@ import (
 func (a *Authorization) CheckUserExists(email string) bool {
 	ctx, cancel := context.WithTimeout(context.Background(),dbTimeout)
 	defer cancel()
-
-	fmt.Println("register check")
     
 	sql, _, err := psql.Select("email").From("users").Where("email IN ($1)").ToSql()
 	if err != nil {
