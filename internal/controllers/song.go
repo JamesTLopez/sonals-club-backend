@@ -7,6 +7,7 @@ import (
 	"sonalsguild/internal/services"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 
@@ -40,19 +41,31 @@ func GetSongById(w http.ResponseWriter, r *http.Request) {
 // POST/songs/song
 func CreateSong(w http.ResponseWriter, r *http.Request) {
 	var songData services.Song
+	userValue := r.Context().Value("user").(jwt.MapClaims)
+	user_id, ok := userValue["spotify_id"].(string)
+
+	if !ok {
+		helpers.MessageLogs.ErrorLog.Println("Something went wrong when grabbing the id")
+
+		return
+	}
+	
+	
 	err := json.NewDecoder(r.Body).Decode(&songData)
 	if err != nil {
 		helpers.MessageLogs.ErrorLog.Println(err)
 		return
 	}
 
-	songCreated, err := song.CreateSong(songData)
+	songCreated, err := song.CreateSong(user_id, songData)
 
 	if err != nil {
 		helpers.MessageLogs.ErrorLog.Println(err)
 		return
 	}
+	// helpers.WriteJson(w, http.StatusOK, "success")
 	helpers.WriteJson(w, http.StatusOK, songCreated)
+
 }
 
 //PUT/songs/{id}

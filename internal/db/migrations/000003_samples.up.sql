@@ -1,7 +1,7 @@
 
 CREATE TABLE IF NOT EXISTS Samples(
    id serial PRIMARY KEY,
-   user_id INT REFERENCES users(id),
+   user_id VARCHAR(255) REFERENCES users(spotify_id),
    song_id INT REFERENCES songs(id),
    sample_name VARCHAR (50) NOT NULL,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

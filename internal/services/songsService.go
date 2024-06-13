@@ -88,7 +88,7 @@ func (s *Song) GetSongById(id string) (*GetSongByIdResponse, error) {
 }
 
 
-func (s *Song) CreateSong(song Song) (*Song,error) {
+func (s *Song) CreateSong(id string, song Song) (*Song,error) {
 	ctx, cancel := context.WithTimeout(context.Background(),dbTimeout)
 
 	defer cancel()
@@ -101,7 +101,7 @@ func (s *Song) CreateSong(song Song) (*Song,error) {
 	_, err := db.ExecContext(
 		ctx,
 		query,
-		1, // TODO: when auth is implemented with jwt, this is where we would put it
+		id, // TODO: when auth is implemented with jwt, this is where we would put it
 		song.Name,
 		song.Labels,
 		song.Description,
