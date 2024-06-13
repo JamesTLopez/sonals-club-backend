@@ -15,7 +15,18 @@ var song services.Song
 
 // GET/songs
 func GetAllSongs(w http.ResponseWriter, r *http.Request) {
-	all, err := song.GetAllSongs()
+	userValue := r.Context().Value("user").(jwt.MapClaims)
+	user_id, ok := userValue["spotify_id"].(string)
+
+	if !ok {
+		helpers.MessageLogs.ErrorLog.Println("Something went wrong when grabbing the id")
+
+		return
+	}
+	
+
+	all, err := song.GetAllSongs(user_id)
+	
 	if err != nil {
 		helpers.MessageLogs.ErrorLog.Println(err)
 		return

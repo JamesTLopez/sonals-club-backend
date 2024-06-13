@@ -10,19 +10,21 @@ type GetAllSongsResponse struct {
 	Song
 	DisplayName string `json:"display_name"`
 }
-func (s *Song) GetAllSongs() ([]*GetAllSongsResponse,error) {
+func (s *Song) GetAllSongs(id string) ([]*GetAllSongsResponse,error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 	
-	sql, _, err := psql.Select("songs.id","display_name","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").ToSql()
+	// sql, _, err := psql.Select("songs.id","display_name","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").ToSql()
+	sql, _, err := psql.Select("songs.id","display_name","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.spotify_id = songs.user_id").Where("songs.user_id IN ($1)",id).ToSql()
 
 	if err != nil {
 		return nil,err
 	}
 	
-	rows,err := db.QueryContext(ctx, sql)
+	rows,err := db.QueryContext(ctx, sql,id)
 
 	if err != nil {
+		
 		return nil, err
 	}
 
@@ -59,7 +61,7 @@ func (s *Song) GetSongById(id string) (*GetSongByIdResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	sql, _, err := psql.Select("songs.id","display_name","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.id = songs.user_id").Where("songs.id IN ($1)").ToSql()
+	sql, _, err := psql.Select("songs.id","display_name","song_name","labels","description","duration","color","songs.created_at").From("songs").Join("users ON users.spotify_id = songs.user_id").Where("songs.id IN ($1)").ToSql()
 
 	if err != nil {
 		return nil,err

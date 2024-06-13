@@ -21,7 +21,7 @@ func GetSpotifyUser(auth AuthResponse) (*GetUserSpotify, error) {
 		fmt.Println("Error decoding generating new request", err)
 		return nil, err
 	}
-
+	
 	// Add headers to the request
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer " + auth.Access_token)
