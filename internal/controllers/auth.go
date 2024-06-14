@@ -85,7 +85,7 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 
 		_,err := authService.RegisterUser(userResp.ID,userResp.DisplayName,userResp.Email)
 		if err != nil {
-			fmt.Println("Error registering user")
+			fmt.Println("Error registering user",err)
 			helpers.ErrorJson(w,err)
 			return 
 		}

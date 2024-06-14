@@ -41,14 +41,13 @@ func (a *Authorization) RegisterUser(spotify_id string, display_name string, ema
 
 	defer cancel()
 	query := `
-		INSERT INTO users (spotify_id, display_name, email) 
-		VALUES ($1, $2, $3) returning *
+		INSERT INTO users ( display_name, email) 
+		VALUES ($1, $2) returning *
 	`
 	 
 	_, err := db.ExecContext(
 		ctx,
 		query,
-		spotify_id,
 		display_name,
 		email)
 	

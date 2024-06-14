@@ -1,7 +1,7 @@
 
 CREATE TABLE IF NOT EXISTS Songs(
    id serial PRIMARY KEY,
-   user_id VARCHAR(255) REFERENCES users(spotify_id),
+   user_id INT REFERENCES users(id),
    song_name VARCHAR (50) NOT NULL,
    labels VARCHAR (50),
    description VARCHAR (50) NOT NULL,
