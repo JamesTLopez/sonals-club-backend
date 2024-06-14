@@ -99,5 +99,5 @@ func GetAuthCallbackSpotify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.WriteJson(w, http.StatusOK, token)
+	helpers.WriteJson(w, http.StatusOK, helpers.Envelop{"authToken":token,"spotify":&authResp})
 }

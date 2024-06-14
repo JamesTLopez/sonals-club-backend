@@ -29,7 +29,7 @@ func (a *Authorization) CheckUserExists(email string) bool {
 
 	err = row.Scan(&user.Email)
 	if err!= nil {
-		fmt.Println("User Does not exist:", err)
+		fmt.Println("User does not exist:", err)
 		return false
 	}
 
