@@ -7,13 +7,39 @@ import (
 	"log"
 	"net/http"
 	"sonalsguild/helpers"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 
 func GetNewReleases(w http.ResponseWriter, r *http.Request) {
+	userValue := r.Context().Value("user").(jwt.MapClaims)
+	access_token, ok := userValue["access_token"].(string)
+
+	if !ok {
+		helpers.MessageLogs.ErrorLog.Println("Something went wrong when grabbing the id")
+
+		return
+	}
+
+	response ,err := helpers.GenerateSpotifyGetRequest(w,r,access_token,"browse/new-releases?limit=2")
+	
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println("Something went wrong making the request to spotify")
+		return 
+	}
+
+
+	var newReleasesResponse AlbumsResponse
+	err = json.Unmarshal(*response, &newReleasesResponse)
+
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println("Something went wrong marshalling content")
+		return 
+	}
 
 	
-	helpers.WriteJson(w, http.StatusOK, helpers.Envelop{"newReleases":""})
+	helpers.WriteJson(w, http.StatusOK, &newReleasesResponse)
 }
 
 

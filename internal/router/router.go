@@ -25,10 +25,11 @@ func Routes() http.Handler {
 
 	router.Group(func(r chi.Router) {
 		r.Use(sMiddle.VerifyToken)
+		r.Get("/api/v1/newreleases", controllers.GetNewReleases)
 	})
+
+
 	
-
-
 	// AuthRouters Spotify
 	router.Get("/auth/{provider}",controllers.GetAutheniticateSpotify);
 	router.Get("/auth/{provider}/callback",controllers.GetAuthCallbackSpotify);

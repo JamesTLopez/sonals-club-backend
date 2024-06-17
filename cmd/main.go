@@ -41,7 +41,7 @@ func main() {
   		log.Fatalf("Error loading .env file: %s", enverr)
  	}
 
-
+	
 
 
 	// Server configutations

@@ -39,3 +39,51 @@ type Image struct {
 	Height   int    `json:"height"`
 	Width    int    `json:"width"`
 }
+
+type AlbumsResponse struct {
+	Albums Albums  `json:"albums"`
+}
+
+// Albums represents the albums part of the JSON response.
+type Albums struct {
+	Href       string                 `json:"href"`
+	Limit      int                    `json:"limit"`
+	Next       string                 `json:"next"`
+	Offset     int                    `json:"offset"`
+	Previous   *string                `json:"previous,omitempty"`
+	Total      int                    `json:"total"`
+	Items      []AlbumItem           `json:"items"`
+}
+
+// AlbumItem represents an item in the items array.
+type AlbumItem struct {
+	AlbumType           string            `json:"album_type"`
+	Artists             []Artist          `json:"artists"`
+	AvailableMarkets    []string          `json:"available_markets"`
+	ExternalUrls        ExternalUrls      `json:"external_urls"`
+	Href                string            `json:"href"`
+	ID                  string            `json:"id"`
+	Images              []Image           `json:"images"`
+	Name               string            `json:"name"`
+	ReleaseDate         string            `json:"release_date"`
+	ReleaseDatePrecision string           `json:"release_date_precision"`
+	Restrictions        Restrictions      `json:"restrictions"`
+	Type                string            `json:"type"`
+	URI                 string            `json:"uri"`
+}
+
+
+// Restrictions represents restrictions on the album.
+type Restrictions struct {
+	Reason string `json:"reason"`
+}
+
+// Artist represents an artist associated with the album.
+type Artist struct {
+	ExternalUrls ExternalUrls `json:"external_urls"`
+	Href         string       `json:"href"`
+	ID           string       `json:"id"`
+	Name         string       `json:"name"`
+	Type         string       `json:"type"`
+	URI          string       `json:"uri"`
+}

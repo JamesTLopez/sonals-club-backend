@@ -7,9 +7,9 @@ import (
 	"net/http"
 )
 
-func GenerateSpotifyRequest(w http.ResponseWriter, r *http.Request,authToken string, url string) (*[]byte,error) {
+func GenerateSpotifyGetRequest(w http.ResponseWriter, r *http.Request,authToken string, url string) (*[]byte,error) {
 
-	req, err := http.NewRequest("GET","https://api.spotify.com/v1/" + "url",nil)
+	req, err := http.NewRequest("GET","https://api.spotify.com/v1/" + url, nil)
 
 	if err != nil {
 		fmt.Println("Error decoding generating new request", err)
