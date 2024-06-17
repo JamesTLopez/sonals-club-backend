@@ -16,7 +16,7 @@ import (
 func GetNewReleases(w http.ResponseWriter, r *http.Request) {
 
 	
-	helpers.WriteJson(w, http.StatusOK, helpers.Envelop{"data":""})
+	helpers.WriteJson(w, http.StatusOK, helpers.Envelop{"newReleases":""})
 }
 
 

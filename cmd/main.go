@@ -5,9 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"sonalsguild/internal/db"
 	"sonalsguild/internal/router"
-	"sonalsguild/internal/services"
 
 	"github.com/joho/godotenv"
 )
@@ -20,7 +18,6 @@ type Config struct {
 
 type Application struct {
 	Config Config
-	Models services.Models
 }
 
 func (app *Application) Serve() error {
@@ -45,15 +42,7 @@ func main() {
  	}
 
 
-    // Database
-	connectionString := os.Getenv("DATABASE_URL")
-	dbConn, databaseErr := db.ConnectPostgres(connectionString)
 
-	if databaseErr != nil {
-		log.Fatal("Cannot connect to database")
-	}
-
-	defer dbConn.DB.Close()
 
 	// Server configutations
 	cfg := Config {
@@ -62,7 +51,6 @@ func main() {
 	
 	app := &Application {
 		Config: cfg,
-		Models: services.New(dbConn.DB),
 	}
 
 	// Start server

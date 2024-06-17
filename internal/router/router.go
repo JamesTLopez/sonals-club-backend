@@ -25,19 +25,6 @@ func Routes() http.Handler {
 
 	router.Group(func(r chi.Router) {
 		r.Use(sMiddle.VerifyToken)
-		// Songs Routes
-		r.Get("/api/v1/songs",controllers.GetAllSongs)
-		r.Get("/api/v1/songs/{id}",controllers.GetSongById)
-		r.Post("/api/v1/songs",controllers.CreateSong)
-		r.Put("/api/v1/songs/{id}",controllers.UpdateSong)
-		r.Delete("/api/v1/songs/{id}",controllers.DeleteSong)
-
-
-		// Samples Routes
-		r.Get("/api/v1/samples", controllers.GetAllSamples);
-		r.Post("/api/v1/samples",controllers.CreateSample);
-		r.Put("/api/v1/samples/{id}", controllers.UpdateSample)
-		r.Delete("/api/v1/samples/{id}", controllers.DeleteSample);
 	})
 	
 
