@@ -9,7 +9,15 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sonalsguild/helpers"
 )
+
+
+func GetNewReleases(w http.ResponseWriter, r *http.Request) {
+
+	
+	helpers.WriteJson(w, http.StatusOK, helpers.Envelop{"data":""})
+}
 
 
 
